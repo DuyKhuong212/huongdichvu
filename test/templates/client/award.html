@@ -1,0 +1,148 @@
+{% extends "client/../base.html" %}
+{% block body %}
+    <div class="container">
+        <div class="my-3 py-3">
+            <h4>
+                Danh sách sinh viên được nhận giải thưởng
+            </h4>
+
+        </div>
+        <table class="table table-hover table-striped table-bordered">
+            <thead>
+            <th>STT</th>
+            <th>Tên giải thưởng</th>
+            <th>Mô tả</th>
+            <th>Giá Trị giải thưởng</th>
+            <th>Action</th>
+            </thead>
+            <tbody id="list">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <div id="modalthem" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Form Apply</h4>
+                </div>
+                <div class="modal-body container">
+                    <form id="formthem" class="form-group" enctype="multipart/form-data">
+                        <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">File bảng điểm(hình ảnh):</label>
+                        <input id="context" type="file" name="context" placeholder="file" class=" form-control">
+                        </div>
+
+                        <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Email:</label>
+                        <input id="email"  name="email" placeholder="email" class=" form-control">
+                        </div>
+
+                        <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Student ID:</label>
+                        <input id="student_id" disabled name="student_id" placeholder="" >
+                        </div>
+
+                        <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Award ID:</label>
+                        <input name="award_id" disabled id="award_id" type="number" placeholder="" >
+                        </div>
+
+                        <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Điểm:</label>
+                        <input name="point" disabled id="point" type="number" placeholder="Điểm" >
+                        </div>
+
+                    </form>
+                    <button type="submit" form="formthem" class="btn btnthem  btn-success m-2">Thêm
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            alo()
+
+            function alo() {
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:8000/api/award/",
+                    success: function (data) {
+                        var html = ""
+                        var i = 1;
+                        $.each(data, function (i, index) {
+                                i++;
+
+                                html += "<tr>"
+                                html += "<td>" + i + "</td>"
+                                html += "<td>" + index.name + "</td>"
+                                html += "<td>" + index.desc + "</td>"
+                                html += "<td>" + index.price + "</td>"
+                                html += "<td><a data-award_id='" + index.id + "' data-toggle='modal' data-target='#modalthem' data-id_xoa='" + index.id + "'  class='btn btn-success register del-data'    href='' > Đăng kí</a></td>"
+                                html += "<tr>"
+
+                            }
+                        )
+                        $('#list').html(html)
+                    },
+                    err: function (err) {
+
+                    }
+                })
+            }
+                    $("form#formthem").submit(function (e) {
+            e.preventDefault();
+            var formData = new FormData();
+            var student = $('#student_id').val()
+                        var award = $('#award_id').val()
+                        var email = $('#email').val()
+                        var point = $('#point').val()
+                        var context = $('#context')[0].files["0"]
+
+                        formData.append("student_id",student)
+                        formData.append("email",email)
+                        formData.append('point',point)
+                        formData.append('award_id',award)
+                        formData.append('context',context)
+
+            $.ajax({
+                type: 'POST',
+                url: 'http://127.0.0.1:8000/api/formApply/',
+                data: formData,
+                success: function (data) {
+                    alo()
+                    alert('thêm thành công')
+                },
+                error: function () {
+                    alert("thêm sản phẩm thất bại")
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        })
+
+
+        })
+        $(document).on('click', '.register', function () {
+            $('#point').val(localStorage.getItem('userPoint'))
+            $('#student_id').val({{ user.id }})
+            $('#award_id').val($(this).data('award_id'))
+
+
+        })
+  </script>
+{% endblock %}

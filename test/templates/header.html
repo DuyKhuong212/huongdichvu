@@ -1,0 +1,61 @@
+<nav  class="navbar navbar-expand-md navbar-light bg-light sticky-top nav container-fluid" >
+  <div class=" container-fluid">
+    <a class="navbar-brand" href="#"><img src=""></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" >
+     <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto ">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Trang chủ</a>
+        </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Trang cá nhân
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="file:///D:/Xoa_ngay2/tutorial-239%20(1)/Bootstrap%204%20Site%20Files/Bootstrap%204%20Site%20Files/Trangcanhan.html">Thông tin cá nhân</a>
+          <!-- đổi mật khẩu, ngôn ngữ -->
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item"  href="file:///D:/Xoa_ngay2/tutorial-239%20(1)/Bootstrap%204%20Site%20Files/Bootstrap%204%20Site%20Files/chungnhantiemchung.html">Cài đặt</a>
+        </div>
+
+      </li>
+      {% if user.is_superuser == True %}
+           <li class="nav-item">
+          <a class="nav-link" href="/approve/">Phê duyệt</a>
+        </li>
+      {% endif %}
+          <li class="nav-item">
+          <a class="nav-link" href="/award/">Giải thưởng</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled"></a>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <input class="form-control me-2" type="Tìm kiếm" placeholder="Tìm kiếm" aria-label="Tìm kiếm">
+        <button class="btn btn-outline-success" type="submit">Tìm kiếm</button>
+      </form>
+        {% if user.username %}
+             <div>
+      	<a class="nav-link" href="">{{ user.username }}</a>
+      </div>
+             <div>
+      	<a class="nav-link log" href="/logout/">Đăng xuất</a>
+      </div>
+        {% else %}
+      <div>
+      	<a class="nav-link" href="/login/">Đăng nhập</a>
+      </div>
+        {% endif %}
+    </div>
+  </div>
+</nav>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script>
+    $(document).on('click','.log',function (){
+        localStorage.removeItem('userPoint')
+    })
+</script>
